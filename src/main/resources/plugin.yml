@@ -1,0 +1,25 @@
+name: HereAlky
+version: '${version}'
+main: com.herealky.herealky.HereAlkyPlugin
+description: Premium Paper auto-brewing plugin with Point A/B bounding selection and AuraSkills integration
+api-version: '1.21'
+author: Antigravity
+softdepend: [AuraSkills]
+
+commands:
+  herealky:
+    description: Main command for HereAlky auto-brewing
+    usage: /herealky <start|stop|select|config|setup|info>
+    permission: herealky.use
+    aliases: [ha, alky]
+
+permissions:
+  herealky.use:
+    description: Allows use of the herealky command
+    default: true
+  herealky.setup:
+    description: Allows use of the setup wizard
+    default: true
+  herealky.config:
+    description: Allows use of the brewing configuration and stand selection
+    default: true
