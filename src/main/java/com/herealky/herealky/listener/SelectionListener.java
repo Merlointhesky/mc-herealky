@@ -14,6 +14,8 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.potion.PotionType;
 
 import java.util.UUID;
 
@@ -37,20 +39,35 @@ public class SelectionListener implements Listener {
             return;
         }
 
+        // Strictly enforce Shift+Right Click
+        if (!player.isSneaking()) {
+            return;
+        }
+
         Block block = event.getClickedBlock();
         if (block == null) return;
 
-        // Verify holding Empty Glass Bottle
+        // Verify holding Water Bottle
         ItemStack held = player.getInventory().getItemInMainHand();
-        if (held == null || held.getType() != Material.GLASS_BOTTLE) {
+        if (held == null || held.getType() != Material.POTION) {
+            return;
+        }
+        if (!(held.getItemMeta() instanceof PotionMeta meta)) {
+            return;
+        }
+        if (meta.getBasePotionType() != PotionType.WATER) {
             return;
         }
 
         event.setCancelled(true);
         Location loc = block.getLocation();
 
-        if (player.isSneaking()) {
+        Location locA = selectionManager.getPointA(uuid);
+        Location locB = selectionManager.getPointB(uuid);
+
+        if (locA == null || (locA != null && locB != null)) {
             selectionManager.setPointA(uuid, loc);
+            selectionManager.setPointB(uuid, null);
             player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 0.8f, 1.2f);
             player.sendMessage(Component.text("✔ Bounding Point A set successfully: " + formatLoc(loc)).color(NamedTextColor.GREEN));
         } else {
