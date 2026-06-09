@@ -1,6 +1,7 @@
 package com.herealky.herealky;
 
 import com.herealky.herealky.auraskills.AuraSkillsHelper;
+import com.herealky.herealky.hereroleplay.HereRolePlayHelper;
 import com.herealky.herealky.command.HereAlkyCommand;
 import com.herealky.herealky.command.SetupWizardCommand;
 import com.herealky.herealky.config.BrewConfigListener;
@@ -24,6 +25,7 @@ public final class HereAlkyPlugin extends JavaPlugin {
     private BrewConfigManager brewConfigManager;
     private BrewConfigUI brewConfigUI;
     private AuraSkillsHelper auraSkillsHelper;
+    private HereRolePlayHelper hereRolePlayHelper;
     private BrewTaskManager brewTaskManager;
     private SetupWizardCommand setupWizardCommand;
 
@@ -37,9 +39,11 @@ public final class HereAlkyPlugin extends JavaPlugin {
         this.brewConfigManager = new BrewConfigManager(this);
         this.brewConfigUI = new BrewConfigUI(this.brewConfigManager);
         this.auraSkillsHelper = new AuraSkillsHelper();
+        this.hereRolePlayHelper = new HereRolePlayHelper();
         this.brewTaskManager = new BrewTaskManager();
 
         this.auraSkillsHelper.init();
+        this.hereRolePlayHelper.init();
 
         // Register Setup Wizard Command Helper
         this.setupWizardCommand = new SetupWizardCommand(this.setupManager, this);
@@ -102,6 +106,10 @@ public final class HereAlkyPlugin extends JavaPlugin {
 
     public AuraSkillsHelper getAuraSkillsHelper() {
         return auraSkillsHelper;
+    }
+
+    public HereRolePlayHelper getHereRolePlayHelper() {
+        return hereRolePlayHelper;
     }
 
     public BrewTaskManager getBrewTaskManager() {

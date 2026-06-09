@@ -1,10 +1,10 @@
 name: HereAlky
-version: '${version}'
+version: '1.1.0'
 main: com.herealky.herealky.HereAlkyPlugin
 description: Premium Paper auto-brewing plugin with Point A/B bounding selection and AuraSkills integration
 api-version: '1.21'
 author: Antigravity
-softdepend: [AuraSkills]
+softdepend: [AuraSkills, HereRolePlay, Vault]
 
 commands:
   herealky:

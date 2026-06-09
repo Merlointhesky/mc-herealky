@@ -2,6 +2,7 @@ package com.herealky.herealky.listener;
 
 import com.herealky.herealky.HereAlkyPlugin;
 import com.herealky.herealky.auraskills.AuraSkillsHelper;
+import com.herealky.herealky.hereroleplay.HereRolePlayHelper;
 import com.herealky.herealky.config.BrewConfigManager;
 import com.herealky.herealky.config.BrewRecipe;
 import com.herealky.herealky.config.PlayerBrewConfig;
@@ -36,6 +37,7 @@ public class BrewListener implements Listener {
     private final BrewConfigManager configManager;
     private final BrewTaskManager taskManager;
     private final AuraSkillsHelper auraSkillsHelper;
+    private final HereRolePlayHelper hereRolePlayHelper;
 
     public BrewListener(HereAlkyPlugin plugin) {
         this.plugin = plugin;
@@ -43,6 +45,7 @@ public class BrewListener implements Listener {
         this.configManager = plugin.getBrewConfigManager();
         this.taskManager = plugin.getBrewTaskManager();
         this.auraSkillsHelper = plugin.getAuraSkillsHelper();
+        this.hereRolePlayHelper = plugin.getHereRolePlayHelper();
     }
 
     @EventHandler
@@ -165,6 +168,11 @@ public class BrewListener implements Listener {
         // Award AuraSkills Alchemy XP
         if (auraSkillsHelper.isAvailable()) {
             auraSkillsHelper.addAlchemyXp(player, baseXp);
+        }
+        
+        // Award HereRolePlay Craft XP
+        if (hereRolePlayHelper.isAvailable()) {
+            hereRolePlayHelper.addCraftXp(player, baseXp);
         }
 
         player.sendActionBar(Component.text("🧪 Stage " + stage + " Complete! +" + baseXp + " Alchemy XP").color(NamedTextColor.GREEN));
