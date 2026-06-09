@@ -38,11 +38,13 @@ public final class HereAlkyPlugin extends JavaPlugin {
         this.setupManager = new SetupManager(this);
         this.brewConfigManager = new BrewConfigManager(this);
         this.brewConfigUI = new BrewConfigUI(this.brewConfigManager);
-        this.auraSkillsHelper = new AuraSkillsHelper();
+        if (getServer().getPluginManager().getPlugin("AuraSkills") != null) {
+            this.auraSkillsHelper = new AuraSkillsHelper();
+            this.auraSkillsHelper.init();
+        }
         this.hereRolePlayHelper = new HereRolePlayHelper();
         this.brewTaskManager = new BrewTaskManager();
 
-        this.auraSkillsHelper.init();
         this.hereRolePlayHelper.init();
 
         // Register Setup Wizard Command Helper

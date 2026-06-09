@@ -166,7 +166,7 @@ public class BrewListener implements Listener {
         player.giveExp(1);
 
         // Award AuraSkills Alchemy XP
-        if (auraSkillsHelper.isAvailable()) {
+        if (auraSkillsHelper != null && auraSkillsHelper.isAvailable()) {
             auraSkillsHelper.addAlchemyXp(player, baseXp);
         }
         

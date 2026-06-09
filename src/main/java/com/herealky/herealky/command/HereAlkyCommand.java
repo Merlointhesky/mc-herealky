@@ -191,7 +191,7 @@ public class HereAlkyCommand implements CommandExecutor {
         player.sendMessage(Component.text("-----------------------------------").color(NamedTextColor.GRAY));
 
         // AuraSkills check
-        if (auraSkillsHelper.isAvailable()) {
+        if (auraSkillsHelper != null && auraSkillsHelper.isAvailable()) {
             player.sendMessage(Component.text(" ★ Alchemy Level: " + auraSkillsHelper.getAlchemyLevel(player)).color(NamedTextColor.YELLOW));
             player.sendMessage(Component.text(" ★ Alchemy Skill XP: " + String.format("%.1f", auraSkillsHelper.getAlchemyXp(player))).color(NamedTextColor.GRAY));
         } else {
