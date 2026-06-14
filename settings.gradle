@@ -1,1 +1,5 @@
 rootProject.name = 'HereAlky'
+
+include ':HereRolePlay'
+project(':HereRolePlay').projectDir = file('../HereRolePlay')
+
