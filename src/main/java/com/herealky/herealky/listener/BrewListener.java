@@ -169,8 +169,11 @@ public class BrewListener implements Listener {
         if (auraSkillsHelper != null && auraSkillsHelper.isAvailable()) {
             auraSkillsHelper.addAlchemyXp(player, baseXp);
         }
-        
 
+        // Award HereRolePlay Craft XP
+        if (hereRolePlayHelper != null && hereRolePlayHelper.isAvailable()) {
+            hereRolePlayHelper.addCraftXp(player, baseXp);
+        }
 
         player.sendActionBar(Component.text("🧪 Stage " + stage + " Complete! +" + baseXp + " Alchemy XP").color(NamedTextColor.GREEN));
         player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 0.5f, 1.2f);

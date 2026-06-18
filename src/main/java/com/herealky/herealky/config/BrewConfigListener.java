@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.UUID;
@@ -84,5 +85,13 @@ public class BrewConfigListener implements Listener {
         if (mat == null) return "None";
         String name = mat.name().toLowerCase().replace("_", " ");
         return name.substring(0, 1).toUpperCase() + name.substring(1);
+    }
+
+    @EventHandler
+    public void onInventoryDrag(InventoryDragEvent event) {
+        String title = PlainTextComponentSerializer.plainText().serialize(event.getView().title());
+        if (title.startsWith("HereAlky Recipes - Page")) {
+            event.setCancelled(true);
+        }
     }
 }

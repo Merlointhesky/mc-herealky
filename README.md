@@ -30,10 +30,10 @@ A premium [Paper](https://papermc.io) Minecraft plugin for **automated potion br
 - **Graceful Auto-Stopping**:
   - Automatically shuts down the active brewing run and notifies the player via chat if they deplete bottles, run out of recipe ingredients, or if the Output Box becomes full.
 
-- **Multi-Stage Experience (Vanilla & AuraSkills)**:
-  - Connects optionally with AuraSkills' Alchemy skill.
-  - Awards Vanilla Brewing XP and AuraSkills Alchemy XP **immediately at every completed stage** (Stage 1 completion, Stage 2 completion, and Stage 3 completion) rather than only on final box deposit.
-  - Scaled experience automatically respects active player Wisdom statistics and leveling multipliers!
+- **Multi-Stage Experience (Vanilla, AuraSkills & HereRolePlay)**:
+  - Connects optionally with AuraSkills' Alchemy skill and HereRolePlay.
+  - Awards Vanilla Brewing XP, AuraSkills Alchemy XP, and HereRolePlay Craft XP **immediately at every completed stage** (Stage 1 completion, Stage 2 completion, and Stage 3 completion) rather than only on final box deposit.
+  - Experience gains automatically respect active player Wisdom statistics and leveling multipliers!
 
 ---
 
@@ -96,7 +96,7 @@ Build using Gradle:
 ```bash
 ./gradlew build
 ```
-The compiled JAR is generated at `build/libs/HereAlky-1.0.0.jar`.
+The compiled JAR is generated at `build/libs/HereAlky-1.2.2.jar`.
 
 ---
 
