@@ -33,7 +33,29 @@ public enum BrewRecipe {
     
     LEAPING_NORMAL("Potion of Leaping", PotionType.LEAPING, Material.NETHER_WART, Material.RABBIT_FOOT, null, 2, 10.0, 25.0, 0.0),
     LEAPING_EXTENDED("Extended Potion of Leaping", PotionType.LONG_LEAPING, Material.NETHER_WART, Material.RABBIT_FOOT, Material.REDSTONE, 3, 10.0, 20.0, 30.0),
-    LEAPING_ENHANCED("Potion of Leaping II", PotionType.STRONG_LEAPING, Material.NETHER_WART, Material.RABBIT_FOOT, Material.GLOWSTONE, 3, 10.0, 20.0, 40.0);
+    LEAPING_ENHANCED("Potion of Leaping II", PotionType.STRONG_LEAPING, Material.NETHER_WART, Material.RABBIT_FOOT, Material.GLOWSTONE, 3, 10.0, 20.0, 40.0),
+
+    // Custom Recipes (Unlocked at 10 brews)
+    MAGNETISM_NORMAL("Potion of Magnetism", PotionType.AWKWARD, Material.NETHER_WART, Material.LODESTONE, null, 2, 20.0, 50.0, 0.0),
+    MAGNETISM_EXTENDED("Extended Potion of Magnetism", PotionType.AWKWARD, Material.NETHER_WART, Material.LODESTONE, Material.REDSTONE, 3, 20.0, 40.0, 60.0),
+    MAGNETISM_ONE_HOUR("1-Hour Potion of Magnetism", PotionType.AWKWARD, Material.NETHER_WART, Material.LODESTONE, Material.NETHER_WART_BLOCK, 3, 20.0, 40.0, 100.0),
+
+    TRUE_SIGHT_NORMAL("Potion of True Sight", PotionType.AWKWARD, Material.NETHER_WART, Material.AMETHYST_SHARD, null, 2, 20.0, 50.0, 0.0),
+    TRUE_SIGHT_EXTENDED("Extended Potion of True Sight", PotionType.AWKWARD, Material.NETHER_WART, Material.AMETHYST_SHARD, Material.REDSTONE, 3, 20.0, 40.0, 60.0),
+    TRUE_SIGHT_ONE_HOUR("1-Hour Potion of True Sight", PotionType.AWKWARD, Material.NETHER_WART, Material.AMETHYST_SHARD, Material.NETHER_WART_BLOCK, 3, 20.0, 40.0, 100.0),
+
+    FEATHERWEIGHT_NORMAL("Potion of Featherweight", PotionType.AWKWARD, Material.NETHER_WART, Material.PHANTOM_MEMBRANE, null, 2, 20.0, 50.0, 0.0),
+    FEATHERWEIGHT_EXTENDED("Extended Potion of Featherweight", PotionType.AWKWARD, Material.NETHER_WART, Material.PHANTOM_MEMBRANE, Material.REDSTONE, 3, 20.0, 40.0, 60.0),
+    FEATHERWEIGHT_ONE_HOUR("1-Hour Potion of Featherweight", PotionType.AWKWARD, Material.NETHER_WART, Material.PHANTOM_MEMBRANE, Material.NETHER_WART_BLOCK, 3, 20.0, 40.0, 100.0),
+
+    OBSIDIAN_SKIN_NORMAL("Potion of Obsidian Skin", PotionType.AWKWARD, Material.NETHER_WART, Material.CRYING_OBSIDIAN, null, 2, 20.0, 50.0, 0.0),
+    OBSIDIAN_SKIN_EXTENDED("Extended Potion of Obsidian Skin", PotionType.AWKWARD, Material.NETHER_WART, Material.CRYING_OBSIDIAN, Material.REDSTONE, 3, 20.0, 40.0, 60.0),
+    OBSIDIAN_SKIN_ONE_HOUR("1-Hour Potion of Obsidian Skin", PotionType.AWKWARD, Material.NETHER_WART, Material.CRYING_OBSIDIAN, Material.NETHER_WART_BLOCK, 3, 20.0, 40.0, 100.0),
+
+    // Custom Recipe (Unlocked at 1000 brews)
+    RANDOM_EFFECT_NORMAL("Potion of Chaos", PotionType.AWKWARD, Material.NETHER_WART, Material.CHORUS_FRUIT, null, 2, 50.0, 100.0, 0.0),
+    RANDOM_EFFECT_EXTENDED("Extended Potion of Chaos", PotionType.AWKWARD, Material.NETHER_WART, Material.CHORUS_FRUIT, Material.REDSTONE, 3, 50.0, 80.0, 120.0),
+    RANDOM_EFFECT_ONE_HOUR("1-Hour Potion of Chaos", PotionType.AWKWARD, Material.NETHER_WART, Material.CHORUS_FRUIT, Material.NETHER_WART_BLOCK, 3, 50.0, 80.0, 200.0);
 
     private final String displayName;
     private final PotionType basePotionType;

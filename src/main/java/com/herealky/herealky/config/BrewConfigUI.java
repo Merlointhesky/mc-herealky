@@ -47,8 +47,18 @@ public class BrewConfigUI {
         if (page == 1) {
             ItemStack nextPage = createGuiItem(Material.ARROW, "→ Next Page (Utility)", List.of("Click to view utility potions"));
             inv.setItem(53, nextPage);
-        } else {
+        } else if (page == 2) {
             ItemStack prevPage = createGuiItem(Material.ARROW, "← Previous Page (Combat)", List.of("Click to view combat potions"));
+            inv.setItem(45, prevPage);
+            ItemStack nextPage = createGuiItem(Material.ARROW, "→ Next Page (Custom)", List.of("Click to view custom potions"));
+            inv.setItem(53, nextPage);
+        } else if (page == 3) {
+            ItemStack prevPage = createGuiItem(Material.ARROW, "← Previous Page (Utility)", List.of("Click to view utility potions"));
+            inv.setItem(45, prevPage);
+            ItemStack nextPage = createGuiItem(Material.ARROW, "→ Next Page (Chaos)", List.of("Click to view chaos potions"));
+            inv.setItem(53, nextPage);
+        } else if (page == 4) {
+            ItemStack prevPage = createGuiItem(Material.ARROW, "← Previous Page (Custom)", List.of("Click to view custom potions"));
             inv.setItem(45, prevPage);
         }
 
@@ -71,13 +81,22 @@ public class BrewConfigUI {
                 bgSlot = 37 + (index - 7);
             }
 
-            // Potion Item
-            ItemStack potionItem = createPotionItem(recipe);
-            inv.setItem(potionSlot, potionItem);
+            PlayerBrewConfig config = configManager.getPlayerConfig(player.getUniqueId());
+            boolean unlocked = isRecipeUnlocked(recipe, config.getPotionsBrewed());
 
-            // Background Indicator (checks player's inventory)
-            ItemStack bgPane = createBackgroundPane(player, recipe);
-            inv.setItem(bgSlot, bgPane);
+            if (!unlocked) {
+                ItemStack lockedItem = createLockedItem(recipe);
+                inv.setItem(potionSlot, lockedItem);
+                
+                ItemStack lockedBg = createGuiItem(Material.RED_STAINED_GLASS_PANE, "❌ Locked", List.of("You have not brewed enough potions."));
+                inv.setItem(bgSlot, lockedBg);
+            } else {
+                ItemStack potionItem = createPotionItem(recipe);
+                inv.setItem(potionSlot, potionItem);
+    
+                ItemStack bgPane = createBackgroundPane(player, recipe);
+                inv.setItem(bgSlot, bgPane);
+            }
 
             index++;
         }
@@ -89,20 +108,38 @@ public class BrewConfigUI {
         return playerPages.getOrDefault(player.getUniqueId(), 1);
     }
 
+    private boolean isRecipeUnlocked(BrewRecipe recipe, int potionsBrewed) {
+        if (recipe.name().contains("ONE_HOUR") && potionsBrewed < 2000) return false;
+        if (recipe.name().contains("RANDOM_EFFECT") && potionsBrewed < 1000) return false;
+        if ((recipe.name().contains("MAGNETISM") || recipe.name().contains("TRUE_SIGHT") ||
+             recipe.name().contains("FEATHERWEIGHT") || recipe.name().contains("OBSIDIAN_SKIN")) && potionsBrewed < 10) return false;
+        return true;
+    }
+
     private List<BrewRecipe> getRecipesForPage(int page) {
         List<BrewRecipe> combat = new ArrayList<>();
         List<BrewRecipe> utility = new ArrayList<>();
+        List<BrewRecipe> custom = new ArrayList<>();
+        List<BrewRecipe> chaos = new ArrayList<>();
 
         for (BrewRecipe recipe : BrewRecipe.values()) {
             if (recipe.name().contains("SWIFTNESS") || recipe.name().contains("HEALING") ||
                 recipe.name().contains("STRENGTH") || recipe.name().contains("REGENERATION")) {
                 combat.add(recipe);
+            } else if (recipe.name().contains("RANDOM_EFFECT")) {
+                chaos.add(recipe);
+            } else if (recipe.name().contains("MAGNETISM") || recipe.name().contains("TRUE_SIGHT") ||
+                       recipe.name().contains("FEATHERWEIGHT") || recipe.name().contains("OBSIDIAN_SKIN")) {
+                custom.add(recipe);
             } else {
                 utility.add(recipe);
             }
         }
 
-        return page == 1 ? combat : utility;
+        if (page == 1) return combat;
+        if (page == 2) return utility;
+        if (page == 3) return custom;
+        return chaos;
     }
 
     public BrewRecipe getRecipeFromSlot(int page, int slot) {
@@ -145,6 +182,28 @@ public class BrewConfigUI {
             potion.setItemMeta(meta);
         }
         return potion;
+    }
+
+    private ItemStack createLockedItem(BrewRecipe recipe) {
+        ItemStack item = new ItemStack(Material.BARRIER);
+        ItemMeta meta = item.getItemMeta();
+        if (meta != null) {
+            meta.displayName(Component.text("Locked: " + recipe.getDisplayName()).color(NamedTextColor.RED).decoration(TextDecoration.ITALIC, false));
+            
+            int requirement = 10;
+            if (recipe.name().contains("RANDOM_EFFECT")) requirement = 1000;
+            if (recipe.name().contains("ONE_HOUR")) requirement = 2000;
+
+            List<Component> lore = new ArrayList<>();
+            lore.add(Component.text("-----------------------").color(NamedTextColor.GRAY));
+            lore.add(Component.text("Requires " + requirement + " Potions Brewed!").color(NamedTextColor.RED));
+            lore.add(Component.text("Keep auto-brewing vanilla potions").color(NamedTextColor.GRAY));
+            lore.add(Component.text("to unlock this custom recipe.").color(NamedTextColor.GRAY));
+            lore.add(Component.text("-----------------------").color(NamedTextColor.GRAY));
+            meta.lore(lore);
+            item.setItemMeta(meta);
+        }
+        return item;
     }
 
     private ItemStack createBackgroundPane(Player player, BrewRecipe recipe) {

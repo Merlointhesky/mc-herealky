@@ -8,6 +8,7 @@ import com.herealky.herealky.config.BrewConfigListener;
 import com.herealky.herealky.config.BrewConfigManager;
 import com.herealky.herealky.config.BrewConfigUI;
 import com.herealky.herealky.listener.BrewListener;
+import com.herealky.herealky.listener.CustomPotionListener;
 import com.herealky.herealky.listener.SelectionListener;
 import com.herealky.herealky.listener.SetupWizardListener;
 import com.herealky.herealky.selection.SelectionManager;
@@ -66,6 +67,7 @@ public final class HereAlkyPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new SetupWizardListener(this.setupManager, this.setupWizardCommand), this);
         getServer().getPluginManager().registerEvents(new BrewConfigListener(this.brewConfigUI, this.brewConfigManager), this);
         getServer().getPluginManager().registerEvents(new BrewListener(this), this);
+        getServer().getPluginManager().registerEvents(new CustomPotionListener(this), this);
 
         // Start Setup Timeout Task Loop (every second)
         new BukkitRunnable() {

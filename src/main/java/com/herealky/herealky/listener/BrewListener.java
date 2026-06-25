@@ -12,6 +12,7 @@ import com.herealky.herealky.task.BrewTask;
 import com.herealky.herealky.task.BrewTaskManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -27,6 +28,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionType;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.UUID;
 
@@ -117,7 +120,35 @@ public class BrewListener implements Listener {
 
                 if (recipe.getStepsCount() == 1) {
                     // 1-Stage Potion (e.g. Weakness) - Batch Complete!
-                    depositPotionsAndComplete(inv, outputChest, player, task, 1);
+                    depositPotionsAndComplete(inv, outputChest, player, task, 1, config);
+                } else if (isCustomRecipe(recipe)) {
+                    // Instant Process Custom Recipe
+                    Material s2Mat = recipe.getStage2Ingredient();
+                    if (countItemsInChest(ingredientChest, s2Mat) == 0) {
+                        if (task != null) task.stopTask("Recipe ingredients depleted: " + formatMatName(s2Mat), NamedTextColor.YELLOW);
+                        return;
+                    }
+                    Material s3Mat = recipe.getStepsCount() == 3 ? recipe.getStage3Ingredient() : null;
+                    if (s3Mat != null && countItemsInChest(ingredientChest, s3Mat) == 0) {
+                        if (task != null) task.stopTask("Recipe ingredients depleted: " + formatMatName(s3Mat), NamedTextColor.YELLOW);
+                        return;
+                    }
+
+                    // Consume
+                    removeItemsFromChest(ingredientChest, s2Mat, 1);
+                    if (s3Mat != null) removeItemsFromChest(ingredientChest, s3Mat, 1);
+
+                    // Transform to custom potion
+                    for (int s = 0; s < 3; s++) {
+                        if (inv.getItem(s) != null && inv.getItem(s).getType() != Material.AIR) {
+                            inv.setItem(s, createCustomPotionItem(recipe));
+                        }
+                    }
+
+                    // Award remaining XP and complete
+                    awardStageXp(player, recipe, 2);
+                    if (recipe.getStepsCount() == 3) awardStageXp(player, recipe, 3);
+                    depositPotionsAndComplete(inv, outputChest, player, task, 3, config);
                 } else {
                     // Feed Stage 2 Ingredient
                     Material s2Mat = recipe.getStage2Ingredient();
@@ -153,7 +184,7 @@ public class BrewListener implements Listener {
                 // BATCH COMPLETE! (This is either Stage 2 finish for a 2-Stage potion, or Stage 3 finish for a 3-Stage potion)
                 int stageCompleted = recipe.getStepsCount();
                 awardStageXp(player, recipe, stageCompleted);
-                depositPotionsAndComplete(inv, outputChest, player, task, 3);
+                depositPotionsAndComplete(inv, outputChest, player, task, 3, config);
             }
         });
     }
@@ -179,7 +210,7 @@ public class BrewListener implements Listener {
         player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 0.5f, 1.2f);
     }
 
-    private void depositPotionsAndComplete(BrewerInventory inv, Container outputChest, Player player, BrewTask task, int potionCount) {
+    private void depositPotionsAndComplete(BrewerInventory inv, Container outputChest, Player player, BrewTask task, int potionCount, PlayerBrewConfig config) {
         Inventory chestInv = outputChest.getInventory();
         int moved = 0;
 
@@ -197,8 +228,48 @@ public class BrewListener implements Listener {
             if (task != null) {
                 task.incrementPotionsCompleted(moved);
             }
+            config.setPotionsBrewed(config.getPotionsBrewed() + moved);
+            configManager.saveConfiguration(player.getUniqueId());
             player.sendMessage(Component.text("✔ Batch completed! " + moved + " potions deposited in Output Box.").color(NamedTextColor.GREEN));
         }
+    }
+
+    private boolean isCustomRecipe(BrewRecipe recipe) {
+        return recipe.name().contains("MAGNETISM") || recipe.name().contains("TRUE_SIGHT") ||
+               recipe.name().contains("FEATHERWEIGHT") || recipe.name().contains("OBSIDIAN_SKIN") ||
+               recipe.name().contains("RANDOM_EFFECT");
+    }
+
+    private ItemStack createCustomPotionItem(BrewRecipe recipe) {
+        ItemStack potion = new ItemStack(Material.POTION);
+        PotionMeta meta = (PotionMeta) potion.getItemMeta();
+        if (meta != null) {
+            meta.setBasePotionType(recipe.getBasePotionType());
+            meta.displayName(Component.text(recipe.getDisplayName())
+                    .color(NamedTextColor.GOLD)
+                    .decoration(TextDecoration.ITALIC, false));
+
+            int duration = recipe.name().contains("EXTENDED") ? 9600 : (recipe.name().contains("ONE_HOUR") ? 72000 : 3600);
+            
+            if (recipe.name().contains("FEATHERWEIGHT")) {
+                meta.addCustomEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, duration, 0), true);
+                meta.addCustomEffect(new PotionEffect(PotionEffectType.JUMP_BOOST, duration, 1), true);
+            } else if (recipe.name().contains("OBSIDIAN_SKIN")) {
+                meta.addCustomEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, duration, 0), true);
+                meta.addCustomEffect(new PotionEffect(PotionEffectType.RESISTANCE, duration, 1), true);
+            } else if (recipe.name().contains("RANDOM_EFFECT")) {
+                PotionEffectType[] types = PotionEffectType.values();
+                for (int i = 0; i < 3; i++) {
+                    PotionEffectType randomType = types[new java.util.Random().nextInt(types.length)];
+                    if (randomType != null && !randomType.isInstant()) {
+                        meta.addCustomEffect(new PotionEffect(randomType, duration, new java.util.Random().nextInt(3)), true);
+                    }
+                }
+            }
+
+            potion.setItemMeta(meta);
+        }
+        return potion;
     }
 
     private int countItemsInChest(Container container, Material material) {

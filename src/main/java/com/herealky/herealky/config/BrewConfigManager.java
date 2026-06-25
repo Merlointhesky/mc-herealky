@@ -48,6 +48,7 @@ public class BrewConfigManager {
         List<Location> stands = config.getRegisteredStands();
         yaml.set("registeredStands", stands);
         yaml.set("lastModified", config.getLastModified());
+        yaml.set("potionsBrewed", config.getPotionsBrewed());
 
         try {
             yaml.save(file);
@@ -82,5 +83,6 @@ public class BrewConfigManager {
         }
         config.setRegisteredStands(stands);
         config.setLastModified(yaml.getLong("lastModified", System.currentTimeMillis()));
+        config.setPotionsBrewed(yaml.getInt("potionsBrewed", 0));
     }
 }

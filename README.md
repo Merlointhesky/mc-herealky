@@ -16,6 +16,12 @@ A premium [Paper](https://papermc.io) Minecraft plugin for **automated potion br
   - Define a 3D region (Point A & Point B bounding box) surrounding one or more brewing stands.
   - The plugin automatically registers all stands in the selection, allowing high-throughput parallel batch processing.
 
+- **Progression System & Custom Potions**:
+  - The plugin tracks your lifetime brewed potions (`potionsBrewed`).
+  - Unlock new pages of Custom and Chaos potions as you reach milestones (e.g., 10 brews, 1000 brews, 2000 brews).
+  - Brew incredibly powerful non-vanilla items such as **Magnetism** (Draws items), **True Sight** (Glows mobs), **Featherweight**, **Obsidian Skin**, and **Chaos**.
+  - All custom recipes are seamlessly integrated into the auto-brewing pipeline and can be upgraded to Extended and 1-Hour variants!
+
 - **Dynamic Potion Recipes GUI**:
   - Interactive double-chest (54 slots) recipe configuration GUI (`/ha config`).
   - **Dynamic Stained Glass Background Indicators**: Directly beneath each potion item, a stained glass indicator displays availability based on your active inventory items:
@@ -96,7 +102,7 @@ Build using Gradle:
 ```bash
 ./gradlew build
 ```
-The compiled JAR is generated at `build/libs/HereAlky-1.2.2.jar`.
+The compiled JAR is generated at `build/libs/HereAlky-1.3.0.jar`.
 
 ---
 

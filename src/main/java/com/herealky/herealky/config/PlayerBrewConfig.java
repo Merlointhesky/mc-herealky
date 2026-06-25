@@ -11,6 +11,7 @@ public class PlayerBrewConfig {
     private BrewRecipe selectedRecipe;
     private List<Location> registeredStands = new ArrayList<>();
     private long lastModified;
+    private int potionsBrewed = 0;
 
     public PlayerBrewConfig(String playerId) {
         this.playerId = playerId;
@@ -45,5 +46,14 @@ public class PlayerBrewConfig {
 
     public void setLastModified(long lastModified) {
         this.lastModified = lastModified;
+    }
+
+    public int getPotionsBrewed() {
+        return potionsBrewed;
+    }
+
+    public void setPotionsBrewed(int potionsBrewed) {
+        this.potionsBrewed = potionsBrewed;
+        this.lastModified = System.currentTimeMillis();
     }
 }
